@@ -70,3 +70,51 @@ body{
   padding: 5px 10px;
   font-size: 16px;
 }
+.list__item{
+  overflow: hidden;
+  padding: 15px 15px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8ee;
+  transition: .5s transform;
+}
+.list__item:last-child{
+  border-bottom: none;
+}
+.list__item:hover{
+  transform: scale(1.02);
+  transition: .5s transform;
+}
+.list__item--done{
+  background: #e5e5e5;
+  color: #888;
+}
+.icon-check{
+  font-size: 25px !important;
+  color: rgba(89, 158, 175, 0.29);
+  vertical-align: middle;
+}
+.icon-check, .icon-sort, .icon-trash{
+  cursor: pointer;
+  transition: .5s transform;
+}
+.icon-check:hover, .icon-sort:hover, .icon-trash:hover{
+  transform: scale(1.2);
+  transition: .5s transform;
+}
+.icon-trash{
+  float: right;
+  top: 4px;
+  position: relative;
+  color: rgba(175, 47, 47, 0.47);
+}
+.icon-check{
+  margin-right: 15px;
+}
+.editText{
+  width: 75%;
+  height: 100%;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
