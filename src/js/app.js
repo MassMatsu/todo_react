@@ -1,24 +1,65 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {TodoList} from './components/TodoList';
+import TodoList from './components/TodoList';
+import TodoCreator from './components/TodoCreator';
+import Search from './components/Search';
+import _ from 'lodash';
 
 class TodoApp extends React.Component{
+
+  constructor(){
+    super();
+    this.state = {
+      data: [
+        {id: this.createHashId(), text: 'sample todo1', isDone: false},
+        {id: this.createHashId(), text: 'sample todo2', isDone: false}
+      ],
+      searchText: ''
+    };
+
+    this.callBackAddTask = this.callBackAddTask.bind(this);
+    this.callBackRemoveTask = this.callBackRemoveTask.bind(this);
+    this.callBackToggleIsDone = this.callBackToggleIsDone.bind(this);
+    this.callBackSearch = this.callBackSearch.bind(this);
+    this.filterCollection = this.filterCollection.bind(this);
+  }
+
+  createHashId(){
+    return Math.random().toString(36).slice(-16);
+  }
+  callBackRemoveTask(id){
+    let data = _.reject(this.state.data, {'id': id});
+    this.setState({data: data});
+  }
+  callBackToggleIsDone(){
+
+  }
+  callBackAddTask(val){
+    let nextData = this.state.data;
+    nextData.push({id: this.createHashId(), text: val});
+    this.setState({data: nextData});
+  }
+  callBackSearch(val){
+    this.setState({searchText: val});
+  }
+  filterCollection(elm){
+    const regexp = new RegExp('^' + this.state.searchText, 'i');
+    return (elm.text.match(regexp));
+  }
+
   render(){
+
+    const data = (this.state.searchText) ? this.state.data.filter(this.filterCollection) : this.state.data;
+
     return (
       <div>
-        <form className="form">
-          <div className="inputArea">
-            <input type="text" className="inputText js-get-val" defaultValue="" placeholder="something todo task" />
-            <span className="error js-toggle-error">入力が空です</span>
-          </div>
-        </form>
+      
+        <TodoCreator callBackAddTask={this.callBackAddTask} />
 
-        <div className="searchBox">
-          <i className="fa fa-search searchBox__icon" aria-hidden="true" />
-          <input type="text" className="searchBox__input js-search" defaultValue="" placeholder="something keyword" />
-        </div>
+        <Search callBackSearch={this.callBackSearch} />
 
-        <TodoList />
+        <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} />
+
       </div>
     );
   }
@@ -26,4 +67,4 @@ class TodoApp extends React.Component{
 ReactDOM.render(
   <TodoApp />,
   document.getElementById('app')
-)
+);
