@@ -14,12 +14,12 @@ class TodoApp extends React.Component{
         {id: this.createHashId(), text: 'sample todo1', isDone: false},
         {id: this.createHashId(), text: 'sample todo2', isDone: false}
       ],
-      searchText: ''
+      searchText: '',
     };
 
     this.callBackAddTask = this.callBackAddTask.bind(this);
     this.callBackRemoveTask = this.callBackRemoveTask.bind(this);
-    this.callBackToggleIsDone = this.callBackToggleIsDone.bind(this);
+    this.callBackClickToggleDone = this.callBackClickToggleDone.bind(this);
     this.callBackSearch = this.callBackSearch.bind(this);
     this.filterCollection = this.filterCollection.bind(this);
   }
@@ -31,9 +31,60 @@ class TodoApp extends React.Component{
     let data = _.reject(this.state.data, {'id': id});
     this.setState({data: data});
   }
-  callBackToggleIsDone(){
+  // handleClickToggleDone(){
+  //   this.setState(prevState => (
+  //     {isDone: !prevState.isDone}
+  //   ));
+  // }
+  
+  callBackClickToggleDone(toggle, id){
+    console.log('app.js ' + toggle + ' ' + id);
 
+    let newData = this.state.data.slice();
+
+    for(let i in newData){
+      if(newData[i].id === id){
+        //console.log('isDone: '+ newData[i].isDone);
+
+        if(newData[i].isDone){
+          console.log('old: '+ newData[i].isDone);
+          newData[i].isDone = false;
+          console.log('new: '+ newData[i].isDone);
+        }else{
+          console.log('old: '+ newData[i].isDone);
+          newData[i].isDone = true;
+          console.log('new: '+ newData[i].isDone);
+        }
+      }
+    }
+    console.log('new isDone[0]: '+ newData[0].isDone);
+    console.log('new isDone[1]: '+ newData[1].isDone);
+
+    this.setState({data: newData});
+    console.dir(this.state.data);
+
+    // for(let i in this.state.data){
+    //   if(this.state.data[i].id === id){
+        
+    //     console.dir('id: '+ this.state.data[i].isDone);
+    //     dataMatched = this.state.data[i].isDone;
+
+    //   }
+    // }
+    // console.log('dataMatched: '+ dataMatched);
+
+    
+    // if(dataMatched){
+    //   this.setState({isDone: false});
+    // }else{
+    //   this.setState({isDone: true});
+    // }
+    
+    
+    // console.dir(this.state.data);
+    
   }
+  
   callBackAddTask(val){
     let nextData = this.state.data;
     nextData.push({id: this.createHashId(), text: val});
@@ -58,7 +109,7 @@ class TodoApp extends React.Component{
 
         <Search callBackSearch={this.callBackSearch} />
 
-        <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} />
+        <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} callBackClickToggleDone={this.callBackClickToggleDone} />
 
       </div>
     );

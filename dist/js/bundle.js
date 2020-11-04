@@ -546,7 +546,7 @@ var TodoApp = function (_React$Component) {
 
     _this.callBackAddTask = _this.callBackAddTask.bind(_this);
     _this.callBackRemoveTask = _this.callBackRemoveTask.bind(_this);
-    _this.callBackToggleIsDone = _this.callBackToggleIsDone.bind(_this);
+    _this.callBackClickToggleDone = _this.callBackClickToggleDone.bind(_this);
     _this.callBackSearch = _this.callBackSearch.bind(_this);
     _this.filterCollection = _this.filterCollection.bind(_this);
     return _this;
@@ -563,9 +563,60 @@ var TodoApp = function (_React$Component) {
       var data = _lodash2.default.reject(this.state.data, { 'id': id });
       this.setState({ data: data });
     }
+    // handleClickToggleDone(){
+    //   this.setState(prevState => (
+    //     {isDone: !prevState.isDone}
+    //   ));
+    // }
+
   }, {
-    key: 'callBackToggleIsDone',
-    value: function callBackToggleIsDone() {}
+    key: 'callBackClickToggleDone',
+    value: function callBackClickToggleDone(toggle, id) {
+      console.log('app.js ' + toggle + ' ' + id);
+
+      var newData = this.state.data.slice();
+
+      for (var i in newData) {
+        if (newData[i].id === id) {
+          //console.log('isDone: '+ newData[i].isDone);
+
+          if (newData[i].isDone) {
+            console.log('old: ' + newData[i].isDone);
+            newData[i].isDone = false;
+            console.log('new: ' + newData[i].isDone);
+          } else {
+            console.log('old: ' + newData[i].isDone);
+            newData[i].isDone = true;
+            console.log('new: ' + newData[i].isDone);
+          }
+        }
+      }
+      console.log('new isDone[0]: ' + newData[0].isDone);
+      console.log('new isDone[1]: ' + newData[1].isDone);
+
+      this.setState({ data: newData });
+      console.dir(this.state.data);
+
+      // for(let i in this.state.data){
+      //   if(this.state.data[i].id === id){
+
+      //     console.dir('id: '+ this.state.data[i].isDone);
+      //     dataMatched = this.state.data[i].isDone;
+
+      //   }
+      // }
+      // console.log('dataMatched: '+ dataMatched);
+
+
+      // if(dataMatched){
+      //   this.setState({isDone: false});
+      // }else{
+      //   this.setState({isDone: true});
+      // }
+
+
+      // console.dir(this.state.data);
+    }
   }, {
     key: 'callBackAddTask',
     value: function callBackAddTask(val) {
@@ -595,7 +646,7 @@ var TodoApp = function (_React$Component) {
         null,
         _react2.default.createElement(_TodoCreator2.default, { callBackAddTask: this.callBackAddTask }),
         _react2.default.createElement(_Search2.default, { callBackSearch: this.callBackSearch }),
-        _react2.default.createElement(_TodoList2.default, { data: data, callBackRemoveTask: this.callBackRemoveTask })
+        _react2.default.createElement(_TodoList2.default, { data: data, callBackRemoveTask: this.callBackRemoveTask, callBackClickToggleDone: this.callBackClickToggleDone })
       );
     }
   }]);
@@ -29264,6 +29315,7 @@ var TodoList = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (TodoList.__proto__ || Object.getPrototypeOf(TodoList)).call(this, props));
 
     _this.handleRemove = _this.handleRemove.bind(_this);
+    _this.handleToggleDone = _this.handleToggleDone.bind(_this);
     return _this;
   }
 
@@ -29271,6 +29323,13 @@ var TodoList = function (_React$Component) {
     key: 'handleRemove',
     value: function handleRemove(id) {
       this.props.callBackRemoveTask(id);
+      console.log('id: ' + id);
+    }
+  }, {
+    key: 'handleToggleDone',
+    value: function handleToggleDone(toggle, id) {
+      this.props.callBackClickToggleDone(toggle, id);
+      console.log('todoList.js ' + toggle);
     }
   }, {
     key: 'render',
@@ -29282,10 +29341,11 @@ var TodoList = function (_React$Component) {
           id: this.props.data[i].id,
           text: this.props.data[i].text,
           isDone: this.props.data[i].isDone,
+          handleToggleDone: this.handleToggleDone,
           onRemove: this.handleRemove
         }));
 
-        //console.log();
+        console.log(this.props.data[i].isDone);
       }
 
       return _react2.default.createElement(
@@ -29344,7 +29404,7 @@ var Task = function (_React$Component) {
       isDone: _this.props.isDone,
       editMode: false
     };
-    _this.handleClickToggleDone = _this.handleClickToggleDone.bind(_this);
+    _this.handleToggleDone = _this.handleToggleDone.bind(_this);
     _this.handleClickRemove = _this.handleClickRemove.bind(_this);
 
     _this.handleChangeText = _this.handleChangeText.bind(_this);
@@ -29353,12 +29413,19 @@ var Task = function (_React$Component) {
     return _this;
   }
 
+  // handleClickToggleDone(){
+  //   this.setState(prevState => (
+  //     {isDone: !prevState.isDone}
+  //   ));
+  // }
+
+
   _createClass(Task, [{
-    key: 'handleClickToggleDone',
-    value: function handleClickToggleDone() {
-      this.setState(function (prevState) {
-        return { isDone: !prevState.isDone };
-      });
+    key: 'handleToggleDone',
+    value: function handleToggleDone() {
+      this.props.handleToggleDone(this.state.isDone, this.state.id);
+      console.log('task.js: ' + this.state.isDone);
+      //console.log('task.js: '+ this.state.text);
     }
   }, {
     key: 'handleClickRemove',
@@ -29390,12 +29457,12 @@ var Task = function (_React$Component) {
     value: function render() {
       var classNameLi = (0, _classnames2.default)({
         'list__item': true,
-        'list__item--done': this.state.isDone
+        'list__item--done': this.props.isDone
       });
       var classNameIcon = (0, _classnames2.default)({
         'fa': true,
-        'fa-circle-thin': !this.state.isDone,
-        'fa-check-circle': this.state.isDone,
+        'fa-circle-thin': !this.props.isDone,
+        'fa-check-circle': this.props.isDone,
         'icon-check': true
       });
       var input = this.state.editMode ? _react2.default.createElement('input', { type: 'text', className: 'editText', value: this.state.text, onChange: this.handleChangeText, onKeyUp: this.handleKeyUpCloseEdit }) : _react2.default.createElement(
@@ -29407,7 +29474,7 @@ var Task = function (_React$Component) {
       return _react2.default.createElement(
         'li',
         { className: classNameLi },
-        _react2.default.createElement('i', { className: classNameIcon, onClick: this.handleClickToggleDone, 'aria-hidden': 'true' }),
+        _react2.default.createElement('i', { className: classNameIcon, onClick: this.handleToggleDone, 'aria-hidden': 'true' }),
         input,
         _react2.default.createElement('i', { className: 'fa fa-trash icon-trash', onClick: this.handleClickRemove, 'aria-hidden': 'true' })
       );
@@ -29606,6 +29673,7 @@ var Search = function (_React$Component) {
 
     _this.state = {
       val: ''
+      //isDone: this.props.isDone
     };
     _this.handleChange = _this.handleChange.bind(_this);
     return _this;

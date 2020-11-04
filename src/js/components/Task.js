@@ -10,7 +10,7 @@ export default class Task extends React.Component{
       isDone: this.props.isDone,
       editMode: false
     };
-    this.handleClickToggleDone = this.handleClickToggleDone.bind(this);
+    this.handleToggleDone = this.handleToggleDone.bind(this);
     this.handleClickRemove = this.handleClickRemove.bind(this);
     
     this.handleChangeText = this.handleChangeText.bind(this);
@@ -18,11 +18,17 @@ export default class Task extends React.Component{
     this.handleKeyUpCloseEdit = this.handleKeyUpCloseEdit.bind(this);
   }
 
-  handleClickToggleDone(){
-    this.setState(prevState => (
-      {isDone: !prevState.isDone}
-    ));
+  // handleClickToggleDone(){
+  //   this.setState(prevState => (
+  //     {isDone: !prevState.isDone}
+  //   ));
+  // }
+  handleToggleDone(){
+    this.props.handleToggleDone(this.state.isDone, this.state.id);
+    console.log('task.js: '+ this.state.isDone);
+    //console.log('task.js: '+ this.state.text);
   }
+
   handleClickRemove(){
     this.props.onRemove(this.state.id);
   }
@@ -45,12 +51,12 @@ export default class Task extends React.Component{
   render(){
     const classNameLi = ClassNames({
       'list__item': true,
-      'list__item--done': this.state.isDone
+      'list__item--done': this.props.isDone
     });
     const classNameIcon = ClassNames({
       'fa': true,
-      'fa-circle-thin': !this.state.isDone,
-      'fa-check-circle': this.state.isDone,
+      'fa-circle-thin': !this.props.isDone,
+      'fa-check-circle': this.props.isDone,
       'icon-check': true
     });
     const input = (this.state.editMode) ?
@@ -59,7 +65,7 @@ export default class Task extends React.Component{
 
     return (
       <li className={classNameLi}>
-        <i className={classNameIcon} onClick={this.handleClickToggleDone} aria-hidden="true" />
+        <i className={classNameIcon} onClick={this.handleToggleDone} aria-hidden="true" />
         {input}
         <i className="fa fa-trash icon-trash" onClick={this.handleClickRemove} aria-hidden="true" />
       </li>

@@ -5,11 +5,18 @@ import Task from './Task';
 export default class TodoList extends React.Component{
   constructor(props){
     super(props);
-    this.handleRemove = this.handleRemove.bind(this);    
+    
+    this.handleRemove = this.handleRemove.bind(this); 
+    this.handleToggleDone = this.handleToggleDone.bind(this);  
   }
 
   handleRemove(id){
     this.props.callBackRemoveTask(id);
+    console.log('id: '+ id);
+  }
+  handleToggleDone(toggle, id){
+    this.props.callBackClickToggleDone(toggle, id);
+    console.log('todoList.js ' + toggle);
   }
   render(){
 
@@ -19,10 +26,11 @@ export default class TodoList extends React.Component{
                       id={this.props.data[i].id}
                       text={this.props.data[i].text}
                       isDone={this.props.data[i].isDone}
+                      handleToggleDone={this.handleToggleDone}
                       onRemove={this.handleRemove}
                   />);
 
-      //console.log();
+      console.log(this.props.data[i].isDone);
     }
 
     return (

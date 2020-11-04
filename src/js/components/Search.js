@@ -4,7 +4,8 @@ export default class Search extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      val: ''
+      val: '',
+      //isDone: this.props.isDone
     };
     this.handleChange = this.handleChange.bind(this);
   }
