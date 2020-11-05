@@ -547,6 +547,7 @@ var TodoApp = function (_React$Component) {
     _this.callBackAddTask = _this.callBackAddTask.bind(_this);
     _this.callBackRemoveTask = _this.callBackRemoveTask.bind(_this);
     _this.callBackClickToggleDone = _this.callBackClickToggleDone.bind(_this);
+    _this.callBackChangeText = _this.callBackChangeText.bind(_this);
     _this.callBackSearch = _this.callBackSearch.bind(_this);
     _this.filterCollection = _this.filterCollection.bind(_this);
     return _this;
@@ -563,59 +564,42 @@ var TodoApp = function (_React$Component) {
       var data = _lodash2.default.reject(this.state.data, { 'id': id });
       this.setState({ data: data });
     }
-    // handleClickToggleDone(){
-    //   this.setState(prevState => (
-    //     {isDone: !prevState.isDone}
-    //   ));
-    // }
-
   }, {
     key: 'callBackClickToggleDone',
-    value: function callBackClickToggleDone(toggle, id) {
-      console.log('app.js ' + toggle + ' ' + id);
-
-      var newData = this.state.data.slice();
+    value: function callBackClickToggleDone(id) {
+      var newData = this.state.data.slice(); // slice()で this.state.data のコピーを newData に格納
 
       for (var i in newData) {
+        // data のレコードを一つずつ検証して、クリックされたタスクのidをとマッチするレコードを探す
         if (newData[i].id === id) {
           //console.log('isDone: '+ newData[i].isDone);
 
           if (newData[i].isDone) {
-            console.log('old: ' + newData[i].isDone);
+            // もしそのタスクの isDone がtrueならfalseに、 falseならtrueに変更 
             newData[i].isDone = false;
-            console.log('new: ' + newData[i].isDone);
+            console.log('new isDone: ' + newData[i].isDone);
           } else {
-            console.log('old: ' + newData[i].isDone);
             newData[i].isDone = true;
-            console.log('new: ' + newData[i].isDone);
+            console.log('new isDone: ' + newData[i].isDone);
           }
         }
       }
-      console.log('new isDone[0]: ' + newData[0].isDone);
-      console.log('new isDone[1]: ' + newData[1].isDone);
-
-      this.setState({ data: newData });
+      this.setState({ data: newData }); // 変更が完了した newData をそのままdataとし、 this.setStateで元のdataを書き換える
       console.dir(this.state.data);
+    }
+  }, {
+    key: 'callBackChangeText',
+    value: function callBackChangeText(val, id) {
+      var newData = this.state.data.slice(); // 上記に全く同じやり方。slice()で this.state.data のコピーを newData に格納
 
-      // for(let i in this.state.data){
-      //   if(this.state.data[i].id === id){
-
-      //     console.dir('id: '+ this.state.data[i].isDone);
-      //     dataMatched = this.state.data[i].isDone;
-
-      //   }
-      // }
-      // console.log('dataMatched: '+ dataMatched);
-
-
-      // if(dataMatched){
-      //   this.setState({isDone: false});
-      // }else{
-      //   this.setState({isDone: true});
-      // }
-
-
-      // console.dir(this.state.data);
+      for (var i in newData) {
+        if (newData[i].id === id) {
+          newData[i].text = val;
+          console.log('newData.text:' + newData[i].text);
+        }
+      }
+      this.setState({ text: val });
+      console.log(this.state.data);
     }
   }, {
     key: 'callBackAddTask',
@@ -646,7 +630,7 @@ var TodoApp = function (_React$Component) {
         null,
         _react2.default.createElement(_TodoCreator2.default, { callBackAddTask: this.callBackAddTask }),
         _react2.default.createElement(_Search2.default, { callBackSearch: this.callBackSearch }),
-        _react2.default.createElement(_TodoList2.default, { data: data, callBackRemoveTask: this.callBackRemoveTask, callBackClickToggleDone: this.callBackClickToggleDone })
+        _react2.default.createElement(_TodoList2.default, { data: data, callBackRemoveTask: this.callBackRemoveTask, callBackClickToggleDone: this.callBackClickToggleDone, callBackChangeText: this.callBackChangeText })
       );
     }
   }]);
@@ -29316,6 +29300,7 @@ var TodoList = function (_React$Component) {
 
     _this.handleRemove = _this.handleRemove.bind(_this);
     _this.handleToggleDone = _this.handleToggleDone.bind(_this);
+    _this.changeText = _this.changeText.bind(_this);
     return _this;
   }
 
@@ -29327,9 +29312,14 @@ var TodoList = function (_React$Component) {
     }
   }, {
     key: 'handleToggleDone',
-    value: function handleToggleDone(toggle, id) {
-      this.props.callBackClickToggleDone(toggle, id);
-      console.log('todoList.js ' + toggle);
+    value: function handleToggleDone(id) {
+      this.props.callBackClickToggleDone(id);
+    }
+  }, {
+    key: 'changeText',
+    value: function changeText(val, id) {
+      this.props.callBackChangeText(val, id);
+      console.log('TodoList.js: ' + val);
     }
   }, {
     key: 'render',
@@ -29342,10 +29332,11 @@ var TodoList = function (_React$Component) {
           text: this.props.data[i].text,
           isDone: this.props.data[i].isDone,
           handleToggleDone: this.handleToggleDone,
+          changeText: this.changeText,
           onRemove: this.handleRemove
         }));
 
-        console.log(this.props.data[i].isDone);
+        console.log('TodoList.js[' + i + ']: ' + this.props.data[i].isDone);
       }
 
       return _react2.default.createElement(
@@ -29423,7 +29414,7 @@ var Task = function (_React$Component) {
   _createClass(Task, [{
     key: 'handleToggleDone',
     value: function handleToggleDone() {
-      this.props.handleToggleDone(this.state.isDone, this.state.id);
+      this.props.handleToggleDone(this.state.id);
       console.log('task.js: ' + this.state.isDone);
       //console.log('task.js: '+ this.state.text);
     }
@@ -29435,7 +29426,8 @@ var Task = function (_React$Component) {
   }, {
     key: 'handleChangeText',
     value: function handleChangeText(e) {
-      this.setState({ text: e.target.value });
+      this.props.changeText(e.target.value, this.state.id); // 入力値とそれに紐ずくidを渡してあげる
+      console.log('Task.js: ' + e.target.value);
     }
   }, {
     key: 'handleClickShowEdit',
@@ -29445,9 +29437,10 @@ var Task = function (_React$Component) {
   }, {
     key: 'handleKeyUpCloseEdit',
     value: function handleKeyUpCloseEdit(e) {
+
       if (e.keyCode === 13 && e.shiftKey === true) {
         this.setState({
-          text: e.currentTarget.value,
+          //text: e.currentTarget.value,
           editMode: false
         });
       }
@@ -29465,10 +29458,10 @@ var Task = function (_React$Component) {
         'fa-check-circle': this.props.isDone,
         'icon-check': true
       });
-      var input = this.state.editMode ? _react2.default.createElement('input', { type: 'text', className: 'editText', value: this.state.text, onChange: this.handleChangeText, onKeyUp: this.handleKeyUpCloseEdit }) : _react2.default.createElement(
+      var input = this.state.editMode ? _react2.default.createElement('input', { type: 'text', className: 'editText', value: this.props.text, onChange: this.handleChangeText, onKeyUp: this.handleKeyUpCloseEdit }) : _react2.default.createElement(
         'span',
         { onClick: this.handleClickShowEdit },
-        this.state.text
+        this.props.text
       );
 
       return _react2.default.createElement(

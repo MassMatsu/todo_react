@@ -24,7 +24,7 @@ export default class Task extends React.Component{
   //   ));
   // }
   handleToggleDone(){
-    this.props.handleToggleDone(this.state.isDone, this.state.id);
+    this.props.handleToggleDone(this.state.id);
     console.log('task.js: '+ this.state.isDone);
     //console.log('task.js: '+ this.state.text);
   }
@@ -33,16 +33,18 @@ export default class Task extends React.Component{
     this.props.onRemove(this.state.id);
   }
 
-  handleChangeText(e){
-    this.setState({text: e.target.value});
+  handleChangeText(e){  
+    this.props.changeText(e.target.value, this.state.id); // 入力値とそれに紐ずくidを渡してあげる
+    console.log('Task.js: '+ e.target.value)
   }
   handleClickShowEdit(){
     this.setState({editMode: true});
   }
   handleKeyUpCloseEdit(e){
+
     if(e.keyCode === 13 && e.shiftKey === true){
       this.setState({
-        text: e.currentTarget.value,
+        //text: e.currentTarget.value,
         editMode: false
       });
     }
@@ -60,8 +62,8 @@ export default class Task extends React.Component{
       'icon-check': true
     });
     const input = (this.state.editMode) ?
-      <input type="text" className="editText" value={this.state.text} onChange={this.handleChangeText} onKeyUp={this.handleKeyUpCloseEdit} /> :
-      <span onClick={this.handleClickShowEdit}>{this.state.text}</span>;
+      <input type="text" className="editText" value={this.props.text} onChange={this.handleChangeText} onKeyUp={this.handleKeyUpCloseEdit} /> :
+      <span onClick={this.handleClickShowEdit}>{this.props.text}</span>;
 
     return (
       <li className={classNameLi}>

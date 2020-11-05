@@ -20,6 +20,7 @@ class TodoApp extends React.Component{
     this.callBackAddTask = this.callBackAddTask.bind(this);
     this.callBackRemoveTask = this.callBackRemoveTask.bind(this);
     this.callBackClickToggleDone = this.callBackClickToggleDone.bind(this);
+    this.callBackChangeText = this.callBackChangeText.bind(this);
     this.callBackSearch = this.callBackSearch.bind(this);
     this.filterCollection = this.filterCollection.bind(this);
   }
@@ -31,60 +32,40 @@ class TodoApp extends React.Component{
     let data = _.reject(this.state.data, {'id': id});
     this.setState({data: data});
   }
-  // handleClickToggleDone(){
-  //   this.setState(prevState => (
-  //     {isDone: !prevState.isDone}
-  //   ));
-  // }
-  
-  callBackClickToggleDone(toggle, id){
-    console.log('app.js ' + toggle + ' ' + id);
+ 
+  callBackClickToggleDone(id){  
+    let newData = this.state.data.slice();    // slice()で this.state.data のコピーを newData に格納
 
-    let newData = this.state.data.slice();
-
-    for(let i in newData){
+    for(let i in newData){        // data のレコードを一つずつ検証して、クリックされたタスクのidをとマッチするレコードを探す
       if(newData[i].id === id){
         //console.log('isDone: '+ newData[i].isDone);
 
-        if(newData[i].isDone){
-          console.log('old: '+ newData[i].isDone);
+        if(newData[i].isDone){    // もしそのタスクの isDone がtrueならfalseに、 falseならtrueに変更 
           newData[i].isDone = false;
-          console.log('new: '+ newData[i].isDone);
-        }else{
-          console.log('old: '+ newData[i].isDone);
+          console.log('new isDone: '+ newData[i].isDone);     
+        }else{ 
           newData[i].isDone = true;
-          console.log('new: '+ newData[i].isDone);
+          console.log('new isDone: '+ newData[i].isDone);
         }
       }
-    }
-    console.log('new isDone[0]: '+ newData[0].isDone);
-    console.log('new isDone[1]: '+ newData[1].isDone);
-
-    this.setState({data: newData});
+    }  
+    this.setState({data: newData});   // 変更が完了した newData をそのままdataとし、 this.setStateで元のdataを書き換える
     console.dir(this.state.data);
-
-    // for(let i in this.state.data){
-    //   if(this.state.data[i].id === id){
-        
-    //     console.dir('id: '+ this.state.data[i].isDone);
-    //     dataMatched = this.state.data[i].isDone;
-
-    //   }
-    // }
-    // console.log('dataMatched: '+ dataMatched);
-
-    
-    // if(dataMatched){
-    //   this.setState({isDone: false});
-    // }else{
-    //   this.setState({isDone: true});
-    // }
-    
-    
-    // console.dir(this.state.data);
-    
   }
-  
+
+  callBackChangeText(val, id){
+    let newData = this.state.data.slice();  // 上記に全く同じやり方。slice()で this.state.data のコピーを newData に格納
+    
+    for (let i in newData){
+      if(newData[i].id === id){
+        newData[i].text = val;
+        console.log('newData.text:'+ newData[i].text)
+      }
+    }
+    this.setState({text: val});
+    console.log(this.state.data);
+  }
+
   callBackAddTask(val){
     let nextData = this.state.data;
     nextData.push({id: this.createHashId(), text: val});
@@ -109,7 +90,7 @@ class TodoApp extends React.Component{
 
         <Search callBackSearch={this.callBackSearch} />
 
-        <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} callBackClickToggleDone={this.callBackClickToggleDone} />
+        <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} callBackClickToggleDone={this.callBackClickToggleDone} callBackChangeText={this.callBackChangeText} />
 
       </div>
     );

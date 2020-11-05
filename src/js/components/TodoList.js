@@ -7,17 +7,22 @@ export default class TodoList extends React.Component{
     super(props);
     
     this.handleRemove = this.handleRemove.bind(this); 
-    this.handleToggleDone = this.handleToggleDone.bind(this);  
+    this.handleToggleDone = this.handleToggleDone.bind(this);
+    this.changeText = this.changeText.bind(this);
   }
 
   handleRemove(id){
     this.props.callBackRemoveTask(id);
     console.log('id: '+ id);
   }
-  handleToggleDone(toggle, id){
-    this.props.callBackClickToggleDone(toggle, id);
-    console.log('todoList.js ' + toggle);
+  handleToggleDone(id){
+    this.props.callBackClickToggleDone(id);
   }
+  changeText(val, id){
+    this.props.callBackChangeText(val, id)
+    console.log('TodoList.js: '+val);
+  }
+
   render(){
 
     let tasks = [];
@@ -27,10 +32,11 @@ export default class TodoList extends React.Component{
                       text={this.props.data[i].text}
                       isDone={this.props.data[i].isDone}
                       handleToggleDone={this.handleToggleDone}
+                      changeText={this.changeText}
                       onRemove={this.handleRemove}
                   />);
 
-      console.log(this.props.data[i].isDone);
+      console.log('TodoList.js['+ i + ']: '+ this.props.data[i].isDone);
     }
 
     return (
