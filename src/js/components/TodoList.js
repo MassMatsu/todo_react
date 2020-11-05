@@ -26,8 +26,8 @@ export default class TodoList extends React.Component{
   render(){
 
     let tasks = [];
-    for(let i in this.props.data){
-      tasks.push(<Task key={this.props.data[i].id}
+    for(let i in this.props.data){    // タスクのコンポネントを一つずつ配列に収納していく（コンポネントの各値とそれに必要な関数をTaskに渡している）
+      tasks.push(<Task key={this.props.data[i].id}    // 配列でコレクションを生成するときにidに加えて key が必要。idをそのままkeyに指定してあげればOK
                       id={this.props.data[i].id}
                       text={this.props.data[i].text}
                       isDone={this.props.data[i].isDone}

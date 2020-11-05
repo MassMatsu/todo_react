@@ -564,8 +564,8 @@ var TodoApp = function (_React$Component) {
   }, {
     key: 'callBackRemoveTask',
     value: function callBackRemoveTask(id) {
-      var data = _lodash2.default.reject(this.state.data, { 'id': id });
-      this.setState({ data: data });
+      var data = _lodash2.default.reject(this.state.data, { 'id': id }); // 第一引数に検索したい対象の配列。第二引数にキーとその値。その要素を配列から除外し、新たな配列を生成
+      this.setState({ data: data }); // 新たな配列を data に格納し、setState更新
     }
   }, {
     key: 'callBackClickToggleDone',
@@ -29330,8 +29330,9 @@ var TodoList = function (_React$Component) {
 
       var tasks = [];
       for (var i in this.props.data) {
-        tasks.push(_react2.default.createElement(_Task2.default, { key: this.props.data[i].id,
-          id: this.props.data[i].id,
+        // タスクのコンポネントを一つずつ配列に収納していく（コンポネントの各値とそれに必要な関数をTaskに渡している）
+        tasks.push(_react2.default.createElement(_Task2.default, { key: this.props.data[i].id // 配列でコレクションを生成するときにidに加えて key が必要。idをそのままkeyに指定してあげればOK
+          , id: this.props.data[i].id,
           text: this.props.data[i].text,
           isDone: this.props.data[i].isDone,
           handleToggleDone: this.handleToggleDone,

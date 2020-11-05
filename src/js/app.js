@@ -32,8 +32,8 @@ class TodoApp extends React.Component{
     //return Math.random().toString(36).slice(-16);
   }
   callBackRemoveTask(id){
-    let data = _.reject(this.state.data, {'id': id});
-    this.setState({data: data});
+    let data = _.reject(this.state.data, {'id': id});   // 第一引数に検索したい対象の配列。第二引数にキーとその値。その要素を配列から除外し、新たな配列を生成
+    this.setState({data: data});    // 新たな配列を data に格納し、setState更新
   }
  
   callBackClickToggleDone(id){  
