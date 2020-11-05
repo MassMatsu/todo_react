@@ -556,7 +556,10 @@ var TodoApp = function (_React$Component) {
   _createClass(TodoApp, [{
     key: 'createHashId',
     value: function createHashId() {
-      return Math.random().toString(36).slice(-16);
+      var uuid = UUID.generate();
+      console.log('uuid: ' + uuid);
+      return uuid;
+      //return Math.random().toString(36).slice(-16);
     }
   }, {
     key: 'callBackRemoveTask',

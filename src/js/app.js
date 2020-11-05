@@ -26,7 +26,10 @@ class TodoApp extends React.Component{
   }
 
   createHashId(){
-    return Math.random().toString(36).slice(-16);
+    let uuid = UUID.generate();
+    console.log('uuid: '+ uuid);
+    return uuid;
+    //return Math.random().toString(36).slice(-16);
   }
   callBackRemoveTask(id){
     let data = _.reject(this.state.data, {'id': id});
@@ -79,6 +82,7 @@ class TodoApp extends React.Component{
     return (elm.text.match(regexp));
   }
 
+  
   render(){
 
     const data = (this.state.searchText) ? this.state.data.filter(this.filterCollection) : this.state.data;
