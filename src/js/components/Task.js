@@ -37,12 +37,12 @@ export default class Task extends React.Component{
     this.props.changeText(e.target.value, this.state.id); // 入力値とそれに紐ずくidを渡してあげる
     console.log('Task.js: '+ e.target.value)
   }
-  handleClickShowEdit(){
+  handleClickShowEdit(){     // editMode の変更
     this.setState({editMode: true});
   }
-  handleKeyUpCloseEdit(e){
+  handleKeyUpCloseEdit(e){    // editMode の変更
 
-    if(e.keyCode === 13 && e.shiftKey === true){
+    if(e.keyCode === 13 && e.shiftKey === true){  // event.keyCode, e.shiftKey キーアップされたボタンを特定することができる
       this.setState({
         //text: e.currentTarget.value,
         editMode: false
@@ -61,7 +61,7 @@ export default class Task extends React.Component{
       'fa-check-circle': this.props.isDone,
       'icon-check': true
     });
-    const input = (this.state.editMode) ?
+    const input = (this.state.editMode) ?   // ショートハンド ( )? input : span 
       <input type="text" className="editText" value={this.props.text} onChange={this.handleChangeText} onKeyUp={this.handleKeyUpCloseEdit} /> :
       <span onClick={this.handleClickShowEdit}>{this.props.text}</span>;
 
@@ -72,5 +72,5 @@ export default class Task extends React.Component{
         <i className="fa fa-trash icon-trash" onClick={this.handleClickRemove} aria-hidden="true" />
       </li>
     );
-  }
+  }     // fa をそのまま使わずcss用にクラスを作るのが良い -> icon-trash
 }

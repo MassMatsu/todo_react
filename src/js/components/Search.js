@@ -5,7 +5,6 @@ export default class Search extends React.Component{
     super(props);
     this.state = {
       val: '',
-      //isDone: this.props.isDone
     };
     this.handleChange = this.handleChange.bind(this);
   }

@@ -557,7 +557,7 @@ var TodoApp = function (_React$Component) {
     key: 'createHashId',
     value: function createHashId() {
       var uuid = UUID.generate();
-      console.log('uuid: ' + uuid);
+      console.log('uuid: ', uuid);
       return uuid;
       //return Math.random().toString(36).slice(-16);
     }
@@ -580,15 +580,15 @@ var TodoApp = function (_React$Component) {
           if (newData[i].isDone) {
             // もしそのタスクの isDone がtrueならfalseに、 falseならtrueに変更 
             newData[i].isDone = false;
-            console.log('new isDone: ' + newData[i].isDone);
+            console.log('new isDone: ', newData[i].isDone);
           } else {
             newData[i].isDone = true;
-            console.log('new isDone: ' + newData[i].isDone);
+            console.log('new isDone: ', newData[i].isDone);
           }
         }
       }
       this.setState({ data: newData }); // 変更が完了した newData をそのままdataとし、 this.setStateで元のdataを書き換える
-      console.dir(this.state.data);
+      console.log('toggle isDone: ', this.state.data);
     }
   }, {
     key: 'callBackChangeText',
@@ -598,10 +598,10 @@ var TodoApp = function (_React$Component) {
       for (var i in newData) {
         if (newData[i].id === id) {
           newData[i].text = val;
-          console.log('newData.text:' + newData[i].text);
+          console.log('newData.text:', newData[i].text);
         }
       }
-      this.setState({ text: val });
+      this.setState({ data: newData });
       console.log(this.state.data);
     }
   }, {
@@ -634,7 +634,7 @@ var TodoApp = function (_React$Component) {
         _react2.default.createElement(_TodoCreator2.default, { callBackAddTask: this.callBackAddTask }),
         _react2.default.createElement(_Search2.default, { callBackSearch: this.callBackSearch }),
         _react2.default.createElement(_TodoList2.default, { data: data, callBackRemoveTask: this.callBackRemoveTask, callBackClickToggleDone: this.callBackClickToggleDone, callBackChangeText: this.callBackChangeText })
-      );
+      ); // return するものは、divタグで囲って必ずひとまとめにするか、ひとつのDOMであること！！ コンポネントをリターン <コンポネント/> 渡す値は キー = 値。ここで使う関数も 関数の変数名 = {this.関数} でコンポネントに渡せる
     }
   }]);
 
@@ -29436,13 +29436,16 @@ var Task = function (_React$Component) {
   }, {
     key: 'handleClickShowEdit',
     value: function handleClickShowEdit() {
+      // editMode の変更
       this.setState({ editMode: true });
     }
   }, {
     key: 'handleKeyUpCloseEdit',
     value: function handleKeyUpCloseEdit(e) {
+      // editMode の変更
 
       if (e.keyCode === 13 && e.shiftKey === true) {
+        // event.keyCode, e.shiftKey キーアップされたボタンを特定することができる
         this.setState({
           //text: e.currentTarget.value,
           editMode: false
@@ -29462,7 +29465,8 @@ var Task = function (_React$Component) {
         'fa-check-circle': this.props.isDone,
         'icon-check': true
       });
-      var input = this.state.editMode ? _react2.default.createElement('input', { type: 'text', className: 'editText', value: this.props.text, onChange: this.handleChangeText, onKeyUp: this.handleKeyUpCloseEdit }) : _react2.default.createElement(
+      var input = this.state.editMode ? // ショートハンド ( )? input : span 
+      _react2.default.createElement('input', { type: 'text', className: 'editText', value: this.props.text, onChange: this.handleChangeText, onKeyUp: this.handleKeyUpCloseEdit }) : _react2.default.createElement(
         'span',
         { onClick: this.handleClickShowEdit },
         this.props.text
@@ -29475,7 +29479,8 @@ var Task = function (_React$Component) {
         input,
         _react2.default.createElement('i', { className: 'fa fa-trash icon-trash', onClick: this.handleClickRemove, 'aria-hidden': 'true' })
       );
-    }
+    } // fa をそのまま使わずcss用にクラスを作るのが良い -> icon-trash
+
   }]);
 
   return Task;

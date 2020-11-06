@@ -17,18 +17,19 @@ export default class TodoCreator extends React.Component{
   handleKeyUp(e){
     if(e.keyCode === 13 && e.shiftKey === true){
 
-      const val = e.target.value;
+      const val = e.target.value; // 変数に callBackAddTask で必要な値を格納
+
       if(!val){
         this.setState({errMsg: '入力が空です'});
         return;
       }
       
-      this.setState({
+      this.setState({   // this.state を初期化
         val: '',
         errMsg: ''
       });
 
-      this.props.callBackAddTask(val);
+      this.props.callBackAddTask(val);  // valを引数に渡して、app.jsで処理
     } 
   }
   render(){

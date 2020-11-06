@@ -27,7 +27,7 @@ class TodoApp extends React.Component{
 
   createHashId(){
     let uuid = UUID.generate();
-    console.log('uuid: '+ uuid);
+    console.log('uuid: ', uuid);
     return uuid;
     //return Math.random().toString(36).slice(-16);
   }
@@ -45,15 +45,15 @@ class TodoApp extends React.Component{
 
         if(newData[i].isDone){    // もしそのタスクの isDone がtrueならfalseに、 falseならtrueに変更 
           newData[i].isDone = false;
-          console.log('new isDone: '+ newData[i].isDone);     
+          console.log('new isDone: ', newData[i].isDone);     
         }else{ 
           newData[i].isDone = true;
-          console.log('new isDone: '+ newData[i].isDone);
+          console.log('new isDone: ', newData[i].isDone);
         }
       }
     }  
     this.setState({data: newData});   // 変更が完了した newData をそのままdataとし、 this.setStateで元のdataを書き換える
-    console.dir(this.state.data);
+    console.log('toggle isDone: ', this.state.data);
   }
 
   callBackChangeText(val, id){
@@ -62,17 +62,17 @@ class TodoApp extends React.Component{
     for (let i in newData){
       if(newData[i].id === id){
         newData[i].text = val;
-        console.log('newData.text:'+ newData[i].text)
+        console.log('newData.text:', newData[i].text)
       }
     }
-    this.setState({text: val});
+    this.setState({data: newData});
     console.log(this.state.data);
   }
 
   callBackAddTask(val){
-    let nextData = this.state.data;
-    nextData.push({id: this.createHashId(), text: val});
-    this.setState({data: nextData});
+    let renewedData = this.state.data;   // 先に今のデータを変数に入れてから、変更可能にする！！
+    renewedData.push({id: this.createHashId(), text: val, isDone: false});   //  プロパティを設定して、1レコード追加！
+    this.setState({data: renewedData});  // this.setState で更新
   }
   callBackSearch(val){
     this.setState({searchText: val});
@@ -85,10 +85,10 @@ class TodoApp extends React.Component{
   
   render(){
 
-    const data = (this.state.searchText) ? this.state.data.filter(this.filterCollection) : this.state.data;
+    const data = (this.state.searchText) ? this.state.data.filter(this.filterCollection) : this.state.data;   // 配列の各要素をフィルターにかける（各要素に対して()の中の関数を実行して、条件によって要素を絞って新しい配列を返す）
 
     return (
-      <div>
+      <div> 
       
         <TodoCreator callBackAddTask={this.callBackAddTask} />
 
@@ -97,9 +97,10 @@ class TodoApp extends React.Component{
         <TodoList data={data} callBackRemoveTask={this.callBackRemoveTask} callBackClickToggleDone={this.callBackClickToggleDone} callBackChangeText={this.callBackChangeText} />
 
       </div>
-    );
+    );  // return するものは、divタグで囲って必ずひとまとめにするか、ひとつのDOMであること！！ コンポネントをリターン <コンポネント/> 渡す値は キー = 値。ここで使う関数も 関数の変数名 = {this.関数} でコンポネントに渡せる
   }
 }
+
 ReactDOM.render(
   <TodoApp />,
   document.getElementById('app')
